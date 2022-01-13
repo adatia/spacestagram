@@ -32,7 +32,6 @@ function App() {
           date: item.date,
           description: item.explanation,
           imageUrl: item.url,
-          liked: false,
           image: item.media_type === 'image'
         }
       });
