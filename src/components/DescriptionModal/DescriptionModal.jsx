@@ -1,5 +1,8 @@
 import React, { useCallback } from "react";
 import { Layout, Modal, TextContainer, Heading, Subheading } from '@shopify/polaris'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart as fasHeart } from '@fortawesome/free-solid-svg-icons';
+import { faHeart as farHeart } from '@fortawesome/free-regular-svg-icons';
 
 function ModalTitle({ title, date }) {
   return (
@@ -10,11 +13,10 @@ function ModalTitle({ title, date }) {
   )
 }
 
-function DescriptionModal({ open, setOpen, title, description, imageUrl, date }) {
+function DescriptionModal({ open, setOpen, title, description, imageUrl, date, liked, setLiked, focusedPhoto, setFocusedPhoto }) {
   const handleChange = useCallback(() => setOpen(!open), [open]);
 
   return (
-    <div style={{ height: '500px' }}>
       <Modal
         large
         open={open}
@@ -24,6 +26,18 @@ function DescriptionModal({ open, setOpen, title, description, imageUrl, date })
           content: 'Close',
           onAction: handleChange,
         }}
+        secondaryActions={[
+          {
+            icon: liked ? <FontAwesomeIcon icon={fasHeart} color='red' transform="left-2 down-1" className={focusedPhoto === imageUrl ? 'fa-beat' : ''} /> : <FontAwesomeIcon icon={farHeart} color='red' transform="left-2 down-1" className={focusedPhoto === imageUrl ? 'fa-beat' : ''} />,
+            content: liked ? 'Unlike' : 'Like',
+            onAction: () => {
+              setLiked(!liked);
+            },
+            onMouseEnter: () => {
+              setFocusedPhoto(imageUrl);
+            },
+          },
+        ]}
       >
         <Modal.Section>
           <Layout>
@@ -38,7 +52,6 @@ function DescriptionModal({ open, setOpen, title, description, imageUrl, date })
           </Layout>
         </Modal.Section>
       </Modal>
-    </div>
   );
 }
 

@@ -34,7 +34,7 @@ function Photo({ post, focusedPhoto, setFocusedPhoto }) {
         objectPosition: 'center'
       }} src={post.imageUrl} />
     </MediaCard >
-    <DescriptionModal open={descriptionOpen} setOpen={setDescriptionOpen} title={post.title} description={post.description} imageUrl={post.imageUrl} date={post.date} />
+    <DescriptionModal open={descriptionOpen} setOpen={setDescriptionOpen} title={post.title} description={post.description} imageUrl={post.imageUrl} date={post.date} liked={liked} setLiked={setLiked} focusedPhoto={focusedPhoto} setFocusedPhoto={setFocusedPhoto} />
   </>
   );
 };
