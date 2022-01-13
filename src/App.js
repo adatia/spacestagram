@@ -42,6 +42,7 @@ function App() {
   }
 
   useEffect(() => {
+    setPosts([]);
     getResults();
   }, [selectedDates]);
 
