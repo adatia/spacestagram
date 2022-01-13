@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import '@shopify/polaris/build/esm/styles.css';
 import en from '@shopify/polaris/locales/en.json';
-import { AppProvider, Page, Layout, Spinner, DisplayText } from '@shopify/polaris';
+import { AppProvider, Page, Layout, Spinner } from '@shopify/polaris';
 import DateModal from './components/DateModal/DateModal';
 import Photo from './components/Photo/Photo';
 import axios from 'axios';
@@ -15,7 +15,7 @@ function App() {
     end: new Date(moment().format('ddd MMM DD YYYY')),
   });
   const [posts, setPosts] = useState([]);
-  console.log(posts.length);
+  const [focusedPhoto, setFocusedPhoto] = useState('');
 
   const getResults = async () => {
     const startDate = selectedDates.start.getFullYear() + '-' + (selectedDates.start.getMonth() + 1) + '-' + selectedDates.start.getDate();
@@ -26,7 +26,8 @@ function App() {
     const res = await axios.get(url);
 
     if (res?.data) {
-      const results = res.data.map((item) => {
+      console.log(res.data);
+      const results = res.data.reverse().map((item) => {
         return {
           title: item.title,
           date: item.date,
@@ -49,20 +50,26 @@ function App() {
       <Page title="Spacestagram" subtitle="Brought to you by NASA's Astronomy Photo of the Day (APOD) API">
         <Layout sectioned>
           <Layout.Section>
-            <DateModal selectedDates={selectedDates} setSelectedDates={setSelectedDates}
-            />
+            {posts.length === 0 ?
+              (<div style={{ 'display': 'flex', 'justifyContent': 'center' }}>
+                <Spinner size="large" />
+              </div>) :
+              (<DateModal selectedDates={selectedDates} setSelectedDates={setSelectedDates}
+              />)
+            }
           </Layout.Section>
-          {posts.length === 0 ?
-            (<Layout.Section>
-              <DisplayText size="extraLarge">Loading...</DisplayText>
-              <Spinner size="large" />
-            </Layout.Section>) : null}
           <Layout.Section>
+            <Layout>
             {posts.map((post) => {
               if (post.image) {
-                return <Photo post={post} />;
+                return (
+                  <Layout.Section oneThird>
+                    <Photo post={post} focusedPhoto={focusedPhoto} setFocusedPhoto={setFocusedPhoto} />
+                  </Layout.Section>
+                );
               }
             })}
+            </Layout>
           </Layout.Section>
         </Layout>
       </Page>
