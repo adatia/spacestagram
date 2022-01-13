@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import '@shopify/polaris/build/esm/styles.css';
 import en from '@shopify/polaris/locales/en.json';
-import { AppProvider, Page, Layout, Card } from '@shopify/polaris';
+import { AppProvider, Page, Layout, Spinner, DisplayText } from '@shopify/polaris';
 import DateModal from './components/DateModal/DateModal';
 import Photo from './components/Photo/Photo';
 import axios from 'axios';
@@ -14,9 +14,35 @@ function App() {
     start: new Date(moment().subtract(1, 'months').format('ddd MMM DD YYYY')),
     end: new Date(moment().format('ddd MMM DD YYYY')),
   });
+  const [posts, setPosts] = useState([]);
+  console.log(posts.length);
+
+  const getResults = async () => {
+    const startDate = selectedDates.start.getFullYear() + '-' + (selectedDates.start.getMonth() + 1) + '-' + selectedDates.start.getDate();
+    const endDate = selectedDates.end.getFullYear() + '-' + (selectedDates.end.getMonth() + 1) + '-' + selectedDates.end.getDate();
+
+    const url = `https://api.nasa.gov/planetary/apod?start_date=${startDate}&end_date=${endDate}&api_key=${API_KEY}`;
+
+    const res = await axios.get(url);
+
+    if (res?.data) {
+      const results = res.data.map((item) => {
+        return {
+          title: item.title,
+          date: item.date,
+          description: item.explanation,
+          imageUrl: item.url,
+          liked: false,
+          image: item.media_type === 'image'
+        }
+      });
+
+      setPosts(results);
+    };
+  }
 
   useEffect(() => {
-    console.log(selectedDates);
+    getResults();
   }, [selectedDates]);
 
   return (
@@ -27,8 +53,17 @@ function App() {
             <DateModal selectedDates={selectedDates} setSelectedDates={setSelectedDates}
             />
           </Layout.Section>
+          {posts.length === 0 ?
+            (<Layout.Section>
+              <DisplayText size="extraLarge">Loading...</DisplayText>
+              <Spinner size="large" />
+            </Layout.Section>) : null}
           <Layout.Section>
-            <Photo />
+            {posts.map((post) => {
+              if (post.image) {
+                return <Photo post={post} />;
+              }
+            })}
           </Layout.Section>
         </Layout>
       </Page>

@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState, useCallback } from 'react';
 import { DatePicker, Button, Modal } from '@shopify/polaris';
+import moment from 'moment';
 
 function DateModal({ selectedDates, setSelectedDates }) {
   const [active, setActive] = useState(false);
@@ -53,6 +54,7 @@ function DateModal({ selectedDates, setSelectedDates }) {
             onMonthChange={handleMonthChange}
             selected={tempDates}
             allowRange
+            disableDatesAfter={new Date(moment().format('ddd MMM DD YYYY'))}
           />
         </Modal.Section>
       </Modal>

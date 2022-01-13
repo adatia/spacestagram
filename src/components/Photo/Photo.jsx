@@ -1,18 +1,21 @@
 import React from 'react';
 import { MediaCard } from '@shopify/polaris';
 
-function Photo() {
+function Photo({ post }) {
   return (
-    <MediaCard title="Getting Started" primaryAction={{
-      content: 'Learn about getting started',
-      onAction: () => {}
-    }} description="Discover how Shopify can power up your entrepreneurial journey." popoverActions={[{ content: 'Dismiss', onAction: () => {} }]} portrait={true} size="small">
+    <MediaCard title={post.title} primaryAction={{
+      content: post.liked ? 'Unlike' : 'Like',
+      onAction: () => {
+        post.liked = !post.liked;
+        console.log(post.liked);
+      }
+    }} description={post.description} portrait={true} size="small">
       <img alt="" width="100%" height="100%" style={{
         objectFit: 'cover',
         objectPosition: 'center'
-      }} src="https://burst.shopifycdn.com/photos/business-woman-smiling-in-office.jpg?width=1850" />
+      }} src={post.imageUrl} />
     </MediaCard>
   );
 };
 
-export default Photo
+export default Photo;
