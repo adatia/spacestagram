@@ -1,7 +1,7 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { Layout, Modal, TextContainer, Heading, Subheading } from '@shopify/polaris'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart as fasHeart } from '@fortawesome/free-solid-svg-icons';
+import { faHeart as fasHeart, faShareNodes as fasShareNodes, faClipboard as fasClipboard } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as farHeart } from '@fortawesome/free-regular-svg-icons';
 
 function ModalTitle({ title, date }) {
@@ -15,6 +15,7 @@ function ModalTitle({ title, date }) {
 
 function DescriptionModal({ open, setOpen, title, description, imageUrl, date, liked, setLiked, focusedPhoto, setFocusedPhoto }) {
   const handleChange = useCallback(() => setOpen(!open), [open]);
+  const [copied, setCopied] = useState(false);
 
   return (
       <Modal
@@ -24,7 +25,10 @@ function DescriptionModal({ open, setOpen, title, description, imageUrl, date, l
         title={<ModalTitle title={title} date={date} />}
         primaryAction={{
           content: 'Close',
-          onAction: handleChange,
+          onAction: () => {
+            setCopied(false);
+            handleChange();
+          },
         }}
         secondaryActions={[
           {
@@ -36,6 +40,15 @@ function DescriptionModal({ open, setOpen, title, description, imageUrl, date, l
             onMouseEnter: () => {
               setFocusedPhoto(imageUrl);
             },
+          },
+          {
+            icon: copied ? <FontAwesomeIcon icon={fasClipboard} transform="left-2 down-1" /> : <FontAwesomeIcon icon={fasShareNodes} transform="left-2 down-1" />,
+            content: copied ? 'Link copied to clipboard!' : 'Share Image',
+            onAction: () => {
+              navigator.clipboard.writeText(imageUrl);
+              setCopied(true);
+            },
+            disabled: copied
           },
         ]}
       >
