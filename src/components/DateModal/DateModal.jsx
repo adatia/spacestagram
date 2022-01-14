@@ -3,7 +3,7 @@ import { useState, useCallback } from 'react';
 import { DatePicker, Button, Modal } from '@shopify/polaris';
 import moment from 'moment';
 
-function DateModal({ selectedDates, setSelectedDates }) {
+function DateModal({ loading, selectedDates, setSelectedDates }) {
   const [active, setActive] = useState(false);
   const [tempDates, setTempDates] = useState(selectedDates);
 
@@ -25,7 +25,7 @@ function DateModal({ selectedDates, setSelectedDates }) {
     [active, setSelectedDates, tempDates],
   );
 
-  const activator = <Button onClick={handleChange}>Select a Date Range</Button>;
+  const activator = <Button loading={loading} onClick={handleChange}>Select a Date Range</Button>;
 
   const [{ month, year }, setDate] = useState({ month: selectedDates.start.getMonth(), year: selectedDates.start.getFullYear() });
 
