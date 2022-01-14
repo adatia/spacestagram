@@ -26,7 +26,6 @@ function App() {
     const res = await axios.get(url);
 
     if (res?.data) {
-      console.log(res.data);
       const results = res.data.reverse().map((item) => {
         return {
           title: item.title,
